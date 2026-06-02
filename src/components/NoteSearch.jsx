@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useRef, useCallback } from 'react';
 
 function NoteSearch({ onSearch }) {
-  const [keyword, setKeyword] = useState('');
+  const inputRef = useRef(null);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setKeyword(value);
-    onSearch(value);  // Kirim nilai ke App setiap kali berubah
-  };
+  const handleChange = useCallback(() => {
+    const value = inputRef.current.value;
+    onSearch(value);
+  }, [onSearch]);
 
   return (
     <div className="note-search" data-testid="note-search">
@@ -15,7 +14,7 @@ function NoteSearch({ onSearch }) {
         type="text"
         className="note-search__input"
         placeholder="Cari catatan..."
-        value={keyword}
+        ref={inputRef}
         onChange={handleChange}
         data-testid="note-search-input"
       />
