@@ -1,14 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 function NoteSearch({ onSearch }) {
   const [keyword, setKeyword] = useState('');
 
-  // Handler stabil menggunakan useCallback
-  const handleChange = useCallback((e) => {
+  const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
-    onSearch(value);
-  }, [onSearch]); // akan berubah hanya jika onSearch berubah (stabil karena dari App sudah dibinding)
+    onSearch(value);  // Kirim nilai ke App setiap kali berubah
+  };
 
   return (
     <div className="note-search" data-testid="note-search">
