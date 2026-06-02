@@ -7,21 +7,17 @@ import NoteSearch from './NoteSearch';
 class App extends React.Component {
   constructor(props) {
     super(props);
-
-    // Cek localStorage terlebih dahulu
     const savedNotes = localStorage.getItem('notes');
     this.state = {
       notes: savedNotes ? JSON.parse(savedNotes) : getInitialData(),
       searchKeyword: '',
     };
-
     this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onArchiveHandler = this.onArchiveHandler.bind(this);
     this.onSearchHandler = this.onSearchHandler.bind(this);
   }
 
-  // Simpan ke localStorage setiap kali notes berubah
   componentDidUpdate(prevProps, prevState) {
     if (prevState.notes !== this.state.notes) {
       localStorage.setItem('notes', JSON.stringify(this.state.notes));
@@ -36,20 +32,20 @@ class App extends React.Component {
       createdAt: new Date().toISOString(),
       archived: false,
     };
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       notes: [newNote, ...prevState.notes],
     }));
   }
 
   onDeleteHandler(id) {
-    this.setState((prevState) => ({
-      notes: prevState.notes.filter((note) => note.id !== id),
+    this.setState(prevState => ({
+      notes: prevState.notes.filter(note => note.id !== id),
     }));
   }
 
   onArchiveHandler(id) {
-    this.setState((prevState) => ({
-      notes: prevState.notes.map((note) =>
+    this.setState(prevState => ({
+      notes: prevState.notes.map(note =>
         note.id === id ? { ...note, archived: !note.archived } : note
       ),
     }));
@@ -62,19 +58,20 @@ class App extends React.Component {
   render() {
     const { notes, searchKeyword } = this.state;
 
+    // Filter berdasarkan keyword (case-insensitive)
     let filteredNotes = notes;
     if (searchKeyword.trim() !== '') {
       const lowerKeyword = searchKeyword.toLowerCase();
-      filteredNotes = notes.filter(
-        (note) =>
-          note.title.toLowerCase().includes(lowerKeyword) ||
-          note.body.toLowerCase().includes(lowerKeyword)
+      filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(lowerKeyword) ||
+        note.body.toLowerCase().includes(lowerKeyword)
       );
     }
 
+    // Urutkan berdasarkan tanggal terbaru
     const sortByDateDesc = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
-    const activeNotes = filteredNotes.filter((note) => !note.archived).sort(sortByDateDesc);
-    const archivedNotes = filteredNotes.filter((note) => note.archived).sort(sortByDateDesc);
+    const activeNotes = filteredNotes.filter(n => !n.archived).sort(sortByDateDesc);
+    const archivedNotes = filteredNotes.filter(n => n.archived).sort(sortByDateDesc);
 
     return (
       <div className="note-app" data-testid="note-app">
