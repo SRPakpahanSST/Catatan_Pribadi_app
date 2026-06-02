@@ -1,4 +1,3 @@
-// src/components/NoteSearch.jsx
 import React, { useState } from 'react';
 
 function NoteSearch({ onSearch }) {
