@@ -9,6 +9,14 @@ function NoteSearch({ onSearch }) {
     onSearch(value);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();        // Mencegah submit form jika ada
+      setKeyword('');            // Hapus teks di kotak pencarian
+      onSearch('');              // Reset pencarian (tampilkan semua catatan)
+    }
+  };
+
   return (
     <div className="note-search" data-testid="note-search">
       <input
@@ -17,6 +25,7 @@ function NoteSearch({ onSearch }) {
         placeholder="Cari catatan..."
         value={keyword}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         data-testid="note-search-input"
       />
     </div>
